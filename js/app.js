@@ -5,8 +5,21 @@
 	;
 
 
-	var ap = angular.module('myapp',[])
-	ap.controller('myController',['$scope','$location',function ($scope,$location) {
+	var ap = angular.module('myapp',['ngRoute'])
+// 配置路由
+	ap.config(['$routeProvider',function ($routeProvider) {
+		$routeProvider
+			// 这是进行参数匹配
+			.when('/:status?',{
+				controller:'myController',
+				templateUrl:'vieTemplate'
+			})
+			// 这是让地址为空  传进去的是一个对象参数
+			.otherwise({redirectTo:'/'})
+
+
+	}])
+	ap.controller('myController',['$scope','$routeParams','$route',function ($scope,$routeParams,$route) {
   // 设置一个随机的id利用递归的方式
 		function getid() {
 			var id= Math.random();
@@ -109,20 +122,19 @@
 			$now =!$now;
 		}
 		// (6)通过路由进行切换
+		// 通过外添加路由进行参数切换  达到spa 的变化
 		 $scope.select = {};
-		// 通过$location.path是获取不到值的
-		// 因此对他要重定为$scope的对像
-		$scope.$location = $location;
-		$scope.$watch('$location.path()',function (now,old) {
-			switch (now){
-				case '/active': $scope.select = {completed:false};;break;
-				case '/completed': $scope.select = {completed:true};break;
-				case '/':;break;
-			}
-
-			console.log('jjjjjj')
-			console.log($location.path())
-		})
+		// 路由参数
+		var status = $routeParams.status;
+		switch (status){
+			case 'active': $scope.select = {completed:false};;break;
+			case 'completed': $scope.select = {completed:true};break;
+			default:
+				// 引入$route,让里面的参数为空
+				$route.updateParams({status:''});
+				$scope.select={};
+				;break;
+		}
 
 
 

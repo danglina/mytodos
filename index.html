@@ -10,57 +10,63 @@
 	<link rel="stylesheet" href="css/app.css">
 </head>
 <body ng-app="myapp">
-<section class="todoapp" ng-controller="myController">
-	<header class="header">
-		<h1>todos</h1>
-		<form ng-submit="add()">
-			<input class="new-todo" placeholder="What needs to be done?" autofocus ng-model="txt" >
-		</form>
-	</header>
-	<!-- This section should be hidden by default and shown when there are todos -->
-	<section class="main" >
-		<input id="toggle-all" class="toggle-all" type="checkbox" ng-click="toggle()">
-		<label for="toggle-all">Mark all as complete</label>
-		<ul class="todo-list">
-			<!-- These are here just to show the structure of the list items -->
-			<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
-			<!--（ ======）这一行是遍历数组-->
-		</ul>
-		<ul class="todo-list">
-			<li ng-repeat="list in todos | filter:select "
-				ng-class="{completed:list.completed,editing:list.id===editlabel}">
-				<div class="view">
-					<!--用于双向数据绑定进行传值-->
-					<input class="toggle" type="checkbox" ng-model="list.completed">
-					<label ng-dblclick="edit(list.id)">{{list.works}}</label>
-					<button class="destroy" ng-click="remove(list.id)"></button>
-				</div>
-				<!--双向数据绑定进行修改-->
-				<form ng-submit="endedit()"><input class="edit" ng-model="list.works"></form>
-			</li>
+<!--angula的视图区域-->
+<ng-view></ng-view>
+<!--这是添加的script模板-->
 
-		</ul>
+<script type="text/ng-template" id="vieTemplate">
+	<section class="todoapp" ng-controller="myController">
+		<header class="header">
+			<h1>todos</h1>
+			<form ng-submit="add()">
+				<input class="new-todo" placeholder="What needs to be done?" autofocus ng-model="txt" >
+			</form>
+		</header>
+		<!-- This section should be hidden by default and shown when there are todos -->
+		<section class="main" >
+			<input id="toggle-all" class="toggle-all" type="checkbox" ng-click="toggle()">
+			<label for="toggle-all">Mark all as complete</label>
+			<ul class="todo-list">
+				<!-- These are here just to show the structure of the list items -->
+				<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+				<!--（ ======）这一行是遍历数组-->
+			</ul>
+			<ul class="todo-list">
+				<li ng-repeat="list in todos | filter:select "
+					ng-class="{completed:list.completed,editing:list.id===editlabel}">
+					<div class="view">
+						<!--用于双向数据绑定进行传值-->
+						<input class="toggle" type="checkbox" ng-model="list.completed">
+						<label ng-dblclick="edit(list.id)">{{list.works}}</label>
+						<button class="destroy" ng-click="remove(list.id)"></button>
+					</div>
+					<!--双向数据绑定进行修改-->
+					<form ng-submit="endedit()"><input class="edit" ng-model="list.works"></form>
+				</li>
+
+			</ul>
+		</section>
+		<!-- This footer should hidden by default and shown when there are todos -->
+		<footer class="footer">
+			<!-- This should be `0 items left` by default -->
+			<span class="todo-count"><strong>{{todos.length}}</strong> item left</span>
+			<!-- Remove this if you don't implement routing -->
+			<ul class="filters">
+				<li>
+					<a class="selected" href="#">All</a>
+				</li>
+				<li>
+					<a href="#!/active">Active</a>
+				</li>
+				<li>
+					<a href="#!/completed">Completed</a>
+				</li>
+			</ul>
+			<!-- Hidden if no completed items are left ↓ -->
+			<button class="clear-completed" ng-click="clear()">Clear completed</button>
+		</footer>
 	</section>
-	<!-- This footer should hidden by default and shown when there are todos -->
-	<footer class="footer">
-		<!-- This should be `0 items left` by default -->
-		<span class="todo-count"><strong>{{todos.length}}</strong> item left</span>
-		<!-- Remove this if you don't implement routing -->
-		<ul class="filters">
-			<li>
-				<a class="selected" href="#">All</a>
-			</li>
-			<li>
-				<a href="#!/active">Active</a>
-			</li>
-			<li>
-				<a href="#!/completed">Completed</a>
-			</li>
-		</ul>
-		<!-- Hidden if no completed items are left ↓ -->
-		<button class="clear-completed" ng-click="clear()">Clear completed</button>
-	</footer>
-</section>
+</script>
 <footer class="info">
 	<p>Double-click to edit a todo</p>
 	<!-- Remove the below line ↓ -->
@@ -71,6 +77,7 @@
 </footer>
 
 <script src="node_modules/angular/angular.js"></script>
+<script src="node_modules/angular-route/angular-route.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
