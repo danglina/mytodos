@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+	<script src="node_modules/angular/angular.js"></script>
+	<script src="node_modules/angular-route/angular-route.js"></script>
+</head>
+<body ng-app="myap">
+<div ng-view></div>
+</body>
+</html>
+<script type="text/ng-template" id="demo_template">
+
+	<!--只有在type="text/javascript" 这样的节点才会被当做js执行，-->
+	<!--而且script的内容就算不被执行，也不会在页面中展现出来-->
+
+	<!--因此很人愿意将他作为末班-->
+	<h1>{{txt}}</h1>
+</script>
+<script>
+	// var ap = angular.module('myapp',['ngRoute']);
+	var ap =angular.module('myap',['ngRoute'])
+	// 配置路由
+	ap.config(['$routeProvider','$locationProvider',function ($routeProvider,$locationProvider) {
+
+		$locationProvider.hashPrefix('');
+		        $routeProvider
+				.when('/students/:name?',{
+					controller:'studentController',
+					templateUrl:'demo_template'
+				})
+				.when('/a',{
+					controller:'aController',
+					templateUrl:'demo_template'
+				})
+				.when('/b',{
+					controller:'bController',
+					templateUrl:'demo_template'
+				})
+				.when('/c',{
+					controller:'cController',
+					templateUrl:'demo_template'
+				})
+						// 路由的重定向
+				.otherwise({
+					redirectTo:'/a'
+				})
+
+		// 路由配置结束
+	},]);
+
+	// 一个路由对应一个控制器， 结合不同路由，控制不同的页面
+	ap.controller('studentController',['$scope','$routeParams',function ($scope,$routeParams) {
+		$scope.txt = '跳转到页面'+$routeParams.name;
+	}]);
+	ap.controller('aController',['$scope',function ($scope) {
+		$scope.txt = '跳转到页面a 啦';
+	}]);
+
+	ap.controller('bController',['$scope',function ($scope) {
+		$scope.txt = '跳转到页面b 啦'
+	}]);
+	ap.controller('cController',['$scope',function ($scope) {
+		$scope.txt = '跳转到页面c 啦'
+	}]);
+
+</script>
