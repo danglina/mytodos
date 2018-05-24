@@ -15,7 +15,7 @@
 <!--这是添加的script模板-->
 
 <script type="text/ng-template" id="vieTemplate">
-	<section class="todoapp" ng-controller="myController">
+	<section class="todoapp" ng-controller="MainController" >
 		<header class="header">
 			<h1>todos</h1>
 			<form ng-submit="add()">
@@ -23,7 +23,7 @@
 			</form>
 		</header>
 		<!-- This section should be hidden by default and shown when there are todos -->
-		<section class="main" >
+		<section class="main" ng-show="todos.length">
 			<input id="toggle-all" class="toggle-all" type="checkbox" ng-click="toggle()">
 			<label for="toggle-all">Mark all as complete</label>
 			<ul class="todo-list">
@@ -32,11 +32,13 @@
 				<!--（ ======）这一行是遍历数组-->
 			</ul>
 			<ul class="todo-list">
-				<li ng-repeat="list in todos | filter:select "
+				<!--track by list.id  是根据不重复的id设置的-->
+				<li ng-repeat="list in todos | filter:select track by list.id "
 					ng-class="{completed:list.completed,editing:list.id===editlabel}">
 					<div class="view">
 						<!--用于双向数据绑定进行传值-->
-						<input class="toggle" type="checkbox" ng-model="list.completed">
+						<!--ng-change="toggled()"的作用是是当贝选装的内容也会被记住-->
+						<input class="toggle" ng-change="toggled()"  type="checkbox" ng-model="list.completed">
 						<label ng-dblclick="edit(list.id)">{{list.works}}</label>
 						<button class="destroy" ng-click="remove(list.id)"></button>
 					</div>
@@ -47,27 +49,27 @@
 			</ul>
 		</section>
 		<!-- This footer should hidden by default and shown when there are todos -->
-		<footer class="footer">
+		<footer class="footer" ng-show="todos.length">
 			<!-- This should be `0 items left` by default -->
 			<span class="todo-count"><strong>{{todos.length}}</strong> item left</span>
 			<!-- Remove this if you don't implement routing -->
 			<ul class="filters">
 				<li>
-					<a class="selected" href="#">All</a>
+					<a ng-class="{selected:select.completed == undefined}" href="#">All</a>
 				</li>
 				<li>
-					<a href="#!/active">Active</a>
+					<a ng-class="{selected:select.completed==false}" href="#!/active">Active</a>
 				</li>
 				<li>
-					<a href="#!/completed">Completed</a>
+					<a ng-class="{selected:select.completed==true}" href="#!/completed">Completed</a>
 				</li>
 			</ul>
 			<!-- Hidden if no completed items are left ↓ -->
-			<button class="clear-completed" ng-click="clear()">Clear completed</button>
+			<button class="clear-completed" ng-click="clear()" ng-show="iscomplete()">Clear completed</button>
 		</footer>
 	</section>
 </script>
-<footer class="info">
+  <footer class="info" ng-show="todos.length">
 	<p>Double-click to edit a todo</p>
 	<!-- Remove the below line ↓ -->
 	<p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
@@ -78,6 +80,9 @@
 
 <script src="node_modules/angular/angular.js"></script>
 <script src="node_modules/angular-route/angular-route.js"></script>
+<script src="js/controllers/main.js"></script>
+<script src="js/services/main.js"></script>
 <script src="js/app.js"></script>
+
 </body>
 </html>
